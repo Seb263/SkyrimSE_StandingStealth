@@ -19,6 +19,7 @@ namespace SettingsIni
 	inline bool bWeaponTypes_ApplyOnTwoHanded = true;
 	inline bool bWeaponTypes_ApplyOnDaggers = true;
 	inline bool bWeaponTypes_ApplyOnRanged = true;
+	inline bool bWeaponTypes_ApplyOnMagic = true;
 
 	class SettingsManager
 	{
@@ -46,7 +47,8 @@ namespace SettingsIni
 				{ "WeaponTypes", "bApplyOnOneHanded", &bWeaponTypes_ApplyOnOneHanded },
 				{ "WeaponTypes", "bApplyOnTwoHandedWeapons", &bWeaponTypes_ApplyOnTwoHanded },
 				{ "WeaponTypes", "bApplyOnDaggers", &bWeaponTypes_ApplyOnDaggers },
-				{ "WeaponTypes", "bApplyOnRanged", &bWeaponTypes_ApplyOnRanged }
+				{ "WeaponTypes", "bApplyOnRanged", &bWeaponTypes_ApplyOnRanged },
+				{ "WeaponTypes", "bApplyOnMagic", &bWeaponTypes_ApplyOnMagic }
 			};
 
 			for (auto& bind : bindings) {

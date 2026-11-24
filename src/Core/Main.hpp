@@ -23,6 +23,21 @@ namespace ModCore
 			return true;
 		}
 
+		static bool IsStandingMagicStealthAttack(RE::Actor* victim, RE::Actor* attacker) noexcept
+		{
+			if (!SettingsIni::bGeneral_Enabled || !SettingsIni::bWeaponTypes_ApplyOnMagic) return false;
+			
+			if (!victim || !attacker || victim == attacker) return false;
+			if (!attacker->IsPlayerRef()) return false;
+			if (attacker->IsSneaking()) return false; // Already handled by Magic Sneak Attacks
+			if (victim->IsDead() || !victim->Is3DLoaded()) return false;
+			
+			if (victim->RequestDetectionLevel(attacker) > 0) return false;
+			if (!CanApplyToActor(attacker)) return false;
+
+			return true;
+		}
+
 		static void Process(RE::Actor* victim, RE::Actor* attacker, RE::HitData& hitData)
 		{
 			if (hitData.flags.any(RE::HitData::Flag::kSneakAttack)) return;

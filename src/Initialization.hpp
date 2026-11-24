@@ -4,6 +4,7 @@
 #include "SettingsIni.hpp"
 
 #include "Core/Main.hpp"
+#include "Core/MagicSneakAttacks.hpp"
 
 #include "Utils/TimeUtils.hpp"
 
@@ -41,13 +42,19 @@ namespace ModData
 			postLoaded = true;
 
 			if (!LoadCIFApi()) return;
-			
-			ModData::CIF_API_Interface->RegisterPreHitCallback((std::string)ModData::MOD_NAME, 0, [](const std::string&, RE::HitData& hitData) {
-				auto* victim = MiscUtils::ResolveHandle<RE::Actor>(hitData.target);
-				auto* attacker = MiscUtils::ResolveHandle<RE::Actor>(hitData.aggressor);
 
-				ModCore::Main::Process(victim, attacker, hitData);
-			});
+			Compat::MagicSneakAttacks::Install();
+
+			auto preHitCallback = [](const std::string&, RE::HitData& hitData) {
+				ModCore::Main::Process(
+					MiscUtils::ResolveHandle<RE::Actor>(hitData.target),
+					MiscUtils::ResolveHandle<RE::Actor>(hitData.aggressor),
+					hitData
+				);
+			};
+
+			ModData::CIF_API_Interface->RegisterProjectilePreHitCallback((std::string)ModData::MOD_NAME, 0, preHitCallback);
+			ModData::CIF_API_Interface->RegisterPreHitCallback((std::string)ModData::MOD_NAME, 0, preHitCallback);
 		}
 
 		void PostLoadDataAlternate()
@@ -87,7 +94,7 @@ namespace ModData
 		{
 			using namespace ModData;
 
-			constexpr REL::Version kRequiredVersion{ 2, 0, 0, 0 };
+			constexpr REL::Version kRequiredVersion{ 2, 0, 8, 0 };
 			const auto dllVersion = MiscUtils::GetPluginVersion("CoreImpactFramework.dll");
 			const bool versionOk = dllVersion != REL::Version{} && dllVersion >= kRequiredVersion;
 

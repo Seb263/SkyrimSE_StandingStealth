@@ -20,7 +20,7 @@ local projectRoot = os.projectdir():gsub("/", "\\") .. "\\"
 -- project infos
 local projectName = "StandingStealth"
 set_project(projectName)
-set_version("1.0.0")
+set_version("1.0.1")
 set_license("GPL-3.0")
 set_languages("c++23")
 set_warnings("allextra")
